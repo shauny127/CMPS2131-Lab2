@@ -1,0 +1,33 @@
+I made two small programs in this lab. Both rely on a stack. 
+One checks delimiters. The other evaluates a postfix expression. 
+At the start, I treated the stack like a plain box. 
+After I worked through the steps of both algorithms, it became clear that the stack’s “return order” is the key part.
+ It is not just storage.
+
+In the delimiter checker, the stack holds opening symbols that still have no matching close yet. 
+As the scan moves forward, when it sees an opening like ( or [ or {, it adds it to the stack. 
+Later, when it sees a closing symbol, it must pair with the most recent opening that is still waiting. 
+That is what nested text requires. The inner pair closes before the outer one.
+
+Take the input ([)]. When the scan reaches the closing ), the stack top is [. 
+That means the latest open was [. Since ) expects (, the program flags a mismatch. 
+If the program instead tried to match ) with the oldest opening first, it would not catch the error and would treat the string as valid. 
+The last-in, first-out rule is what lets the program verify proper nesting.
+
+In the postfix calculator, the stack has a different job. 
+Each stack entry is a number that is waiting for an operator. 
+When the program reads a number, it pushes it.
+ When it reads an operator, like -, it takes the top two numbers off the stack. 
+ The newest number becomes the right side value. The older number becomes the left side value.
+
+For 10 4 -, the program first pushes 10. Then it pushes 4. 
+When it hits -, it pops 4 first as the right operand.
+ Then it pops 10 as the left operand. So the math is 10 minus 4, which gives 6. 
+ It is not 4 minus 10. This result depends on the stack giving back the latest value first. 
+ If I had handled the oldest operand first, the subtract and divide steps would not match the correct results.
+
+In both programs, LIFO is not just a minor option. It is what makes the logic work.
+ The delimiter check must look at the newest opener because closing happens from the inside back out. 
+ The postfix calculator also needs the latest operand because the operator works on the value on the right. 
+ Skip LIFO and you can still get outputs that seem fine at first glance, but they will be wrong in the end.
+
